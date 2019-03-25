@@ -14,13 +14,25 @@ append body
             .right-unit
                 +panel-primary("Options")
                     .options-panel
-                        +accordion("sample")
-                            +accordion-item-primary("Title1","sample","true")
-                                |  This is first accordion content
-                            +accordion-item-default("Title2","sample")
-                                |  This is second accordion content
-                            +accordion-item-default("Title3","sample")
-                                |  This is third accordion content
+                        .PureMapOptions
+                            .cb-section.LatLonJump
+                                .cb-flex.cb-flex-row
+                                    .spacer
+                                    +a-btn-success("#") Jump to Lat/Lon
+                                .cb-flex.cb-flex-row
+                                    +input("text","Lat","Lat","Latitude")
+                                    +input("text","Long","Long","Longitude")
+                            .cb-section.SetZoom
+                                .cb-flex.cb-flex-row
+                                    .spacer-1
+                                    span.cb-bold Zoom Level
+                                .cb-flex.cb-flex-row
+                                    +input-simple("text","Zoom","Zoom","Zoom")
+                                    +a-btn-success("#") Set Zoom
+                        .DataSetCreationOptions
+                            +radio-toggle-primary("DrawShape",[{caption: "PolyLine"}, {caption: "Circle"}, {caption: "Square"}],1)
+
+
         #temp
         +tab-list(["PureMap", "DataSetCreation", "Profile", "Messages", "Settings"],0)
             +tab("PureMap","active")

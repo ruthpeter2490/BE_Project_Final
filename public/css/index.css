@@ -9,7 +9,7 @@
   justify-content: space-between;
 }
 .container-flex .left-unit {
-  flex: 30;
+  flex: 25;
 }
 .container-flex .left-unit #mapId {
   height: 40vw;
@@ -19,6 +19,37 @@
 }
 .container-flex .right-unit {
   flex: 10;
+}
+
+.cb-hide {
+  display: none;
+}
+
+.cb-bold {
+  font-weight: bold;
+}
+
+.cb-spacer-1 {
+  padding: 1rem;
+}
+
+.cb-shrink {
+  flex: 0;
+}
+
+.cb-flex {
+  display: flex;
+}
+
+.cb-flex-row {
+  flex-direction: row;
+}
+
+.cb-section {
+  margin-bottom: 1rem;
+  border: lightgray thin solid;
+  border-radius: 5px;
+  padding: 3px;
 }
 
 .logo-grid {
