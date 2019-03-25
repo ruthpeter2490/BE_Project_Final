@@ -1,0 +1,19 @@
+extends ../node_modules/pug-bootstrap/_bootstrap
+
+append styles
+    // Custom styles for this template
+    link(href='../css/starter-template.css', rel='stylesheet')
+
+    // leaflet
+    link(href='https://unpkg.com/leaflet@1.4.0/dist/leaflet.css', rel='stylesheet')
+
+
+block body
+    +navbar-fixed("MapAnalyst","navbar","inverse")
+        +nav_item("#","active") Home
+        +nav_item("#") About
+        +nav_item("#") Contact
+
+append scripts
+    script(src='https://unpkg.com/leaflet@1.4.0/dist/leaflet.js')
+
