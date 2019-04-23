@@ -1,56 +1,43 @@
 .big-container {
   max-width: 92vw;
-  margin: 1.5rem auto auto;
-}
+  margin: 1.5rem auto auto; }
 
 .container-flex {
   max-width: 97vw;
   display: flex;
-  justify-content: space-between;
-}
-.container-flex .left-unit {
-  flex: 25;
-}
-.container-flex .left-unit #mapId {
-  height: 40vw;
-}
-.container-flex .spacer {
-  flex: 1;
-}
-.container-flex .right-unit {
-  flex: 10;
-}
+  justify-content: space-between; }
+  .container-flex .left-unit {
+    flex: 25; }
+    .container-flex .left-unit #mapId {
+      height: 40vw; }
+  .container-flex .spacer {
+    flex: 1; }
+  .container-flex .right-unit {
+    flex: 10; }
 
 .cb-hide {
-  display: none;
-}
+  display: none; }
 
 .cb-bold {
-  font-weight: bold;
-}
+  font-weight: bold; }
 
 .cb-spacer-1 {
-  padding: 1rem;
-}
+  padding: 1rem; }
 
 .cb-shrink {
-  flex: 0;
-}
+  flex: 0; }
 
 .cb-flex {
-  display: flex;
-}
+  display: flex; }
 
 .cb-flex-row {
-  flex-direction: row;
-}
+  flex-direction: row; }
 
 .cb-section {
   margin-bottom: 1rem;
   border: lightgray thin solid;
   border-radius: 5px;
-  padding: 3px;
-}
+  padding: 3px; }
 
 .logo-grid {
   height: auto;
@@ -61,55 +48,42 @@
   overflow: hidden;
   list-style: none;
   margin: 0;
-  padding: 0;
-}
+  padding: 0; }
 
 .logo-grid-item {
   background-color: lightgrey;
   padding: 0.5rem;
   flex: 1 1 100%;
-  height: 200px;
-}
+  height: 200px; }
 
 .item-inner {
   background-color: white;
   padding: 1rem;
-  height: 100%;
-}
+  height: 100%; }
 
 .item-heading {
   margin: 0;
   color: #444;
   font-size: 3rem;
-  text-align: center;
-}
+  text-align: center; }
 
 .item-body {
   margin: 0;
   color: #444;
   font-size: 1rem;
-  text-align: center;
-}
+  text-align: center; }
 
 @media all and (min-width: 550px) {
   .item {
-    flex-basis: 50%;
-  }
-}
+    flex-basis: 50%; } }
 @media all and (min-width: 760px) {
   .item {
-    flex-basis: 33.33333%;
-  }
-}
+    flex-basis: 33.33333%; } }
 @media all and (min-width: 920px) {
   .item {
-    flex-basis: 25%;
-  }
-}
+    flex-basis: 25%; } }
 @media all and (min-width: 1200px) {
   .item {
-    flex-basis: 20%;
-  }
-}
+    flex-basis: 20%; } }
 
 /*# sourceMappingURL=index.css.map */
