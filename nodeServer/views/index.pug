@@ -1,8 +1,4 @@
 extends ./layout
-append styles
-    link(href='/css/index.css', rel='stylesheet')
-append scripts
-    script(src='/js/main.js')
 
 append body
     .big-container
@@ -29,10 +25,15 @@ append body
                                 .cb-flex.cb-flex-row
                                     +input-simple("text","Zoom","Zoom","Zoom")
                                     +a-btn-success("#") Set Zoom
+                            .cb-section#Layers
+                                span.cb-bold Layers
+                                div.layersSelection
+                                    span#masks
+                                        +label-default("Masks")
+                                    span#paths
+                                        +label-default("Paths")
                         .DataSetCreationOptions
                             +radio-toggle-primary("DrawShape",[{caption: "PolyLine"}, {caption: "Circle"}, {caption: "Square"}],1)
-
-
         #temp
         +tab-list(["PureMap", "DataSetCreation", "Profile", "Messages", "Settings"],0)
             +tab("PureMap","active")
@@ -55,4 +56,12 @@ append body
                 #SettingsMarker
                 h1 Settings
                 p This is Settings tab
-
+    style.
+        .layersSelection {
+            margin:.5rem;
+        }
+        .layersSelection span{
+            margin-right: .2rem;
+            user-select: none;
+            font-size: 1.2rem;
+        }

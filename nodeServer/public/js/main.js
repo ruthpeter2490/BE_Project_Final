@@ -1,96 +1,20 @@
-function isMergeableObject(val) {
-    var nonNullObject = val && typeof val === 'object';
 
-    return nonNullObject
-        && Object.prototype.toString.call(val) !== '[object RegExp]'
-        && Object.prototype.toString.call(val) !== '[object Date]'
-}
+const layerMaskBind = (cssSelector, toggleOnVal, toggleOffVal,  callbackOnClick) => {
+    var elem = $(cssSelector);
+    elem.on('click', (() =>{
+        elem.toggleClass(toggleOnVal);
+        elem.toggleClass(toggleOffVal);
+        var selected = elem.hasClass(toggleOnVal);
+        callbackOnClick(selected);
+    }))
 
-function emptyTarget(val) {
-    return Array.isArray(val) ? [] : {}
-}
-
-function cloneIfNecessary(value, optionsArgument) {
-    var clone = optionsArgument && optionsArgument.clone === true;
-    return (clone && isMergeableObject(value)) ? deepmerge(emptyTarget(value), value, optionsArgument) : value
-}
-
-function defaultArrayMerge(target, source, optionsArgument) {
-    var destination = target.slice()
-    source.forEach(function(e, i) {
-        if (typeof destination[i] === 'undefined') {
-            destination[i] = cloneIfNecessary(e, optionsArgument)
-        } else if (isMergeableObject(e)) {
-            destination[i] = deepmerge(target[i], e, optionsArgument)
-        } else if (target.indexOf(e) === -1) {
-            destination.push(cloneIfNecessary(e, optionsArgument))
-        }
-    })
-    return destination
-}
-
-function mergeObject(target, source, optionsArgument) {
-    var destination = {}
-    if (isMergeableObject(target)) {
-        Object.keys(target).forEach(function (key) {
-            destination[key] = cloneIfNecessary(target[key], optionsArgument)
-        })
-    }
-    Object.keys(source).forEach(function (key) {
-        if (!isMergeableObject(source[key]) || !target[key]) {
-            destination[key] = cloneIfNecessary(source[key], optionsArgument)
-        } else {
-            destination[key] = deepmerge(target[key], source[key], optionsArgument)
-        }
-    })
-    return destination
-}
-
-function deepmerge(target, source, optionsArgument) {
-    var array = Array.isArray(source);
-    var options = optionsArgument || { arrayMerge: defaultArrayMerge }
-    var arrayMerge = options.arrayMerge || defaultArrayMerge
-
-    if (array) {
-        return Array.isArray(target) ? arrayMerge(target, source, optionsArgument) : cloneIfNecessary(source, optionsArgument)
-    } else {
-        return mergeObject(target, source, optionsArgument)
-    }
-}
-
-deepmerge.all = function deepmergeAll(array, optionsArgument) {
-    if (!Array.isArray(array) || array.length < 2) {
-        throw new Error('first argument should be an array with at least two elements')
-    }
-    return array.reduce(function(prev, next) {
-        return deepmerge(prev, next, optionsArgument)
-    })
 };
-
-let respondToVisibility = function(element, callback) {
-    let options = {
-        root: document.documentElement
-    };
-    let observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if(entry.intersectionRatio > 0){callback();}
-        });
-    }, options);
-    (element instanceof jQuery) ?    observer.observe(element[0]):     observer.observe(element);
-};
-if (typeof(Number.prototype.toRad) === "undefined") {
-    Number.prototype.toRad = function() {
-        return this * Math.PI / 180;
-    }
-}
 
 function getTileURL(lat, lon, zoom) {
     let xtile = parseInt(Math.floor( (lon + 180) / 360 * (1<<zoom) ));
     let ytile = parseInt(Math.floor( (1 - Math.log(Math.tan(lat.toRad()) + 1 / Math.cos(lat.toRad())) / Math.PI) / 2 * (1<<zoom) ));
     return { z :zoom , x: xtile ,y: ytile};
 }
-
-
 
 
 let global_poly = "" ;
@@ -107,6 +31,12 @@ let state = {
         },
         zoom:16,
         tile: getTileURL(19.04341400140714,72.82197883695116,16),
+        layers:{
+            main:{
+                "masks":false,
+                "paths":false
+            }
+        }
     }
 };
 
@@ -197,5 +127,33 @@ $(function() {
     });
     $('.PureMapOptions div.cb-section.SetZoom a').on("click", (e) => {let zoom = $("#Zoom").val();
         mymap.setZoom(zoom);
-    })
+    });
+
+    // Main Layers [Maps, Masks, Paths]
+    const mainLayers = {
+        "#masks > span": () => setState(),
+        "#paths > span": () => console.log("paths toggled"),
+    };
+    $.each(mainLayers, (k,v) =>  layerMaskBind(k,"label-success", "label-default",v ));
+
 });
+{PureMap:{ layers:{main:{"masks":}}}}
+t state = {
+    test:"test",
+    tabs:{
+        visible:"PureMap"
+    },
+    PureMap:    {
+        center:{
+            lat:19.04341400140714,
+            long:72.82197883695116,
+        },
+        zoom:16,
+        tile: getTileURL(19.04341400140714,72.82197883695116,16),
+        layers:{
+            main:{
+                "masks":false,
+                "paths":false
+            }
+        }
+    }
