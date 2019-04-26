@@ -91,8 +91,6 @@ function getTileURL(lat, lon, zoom) {
 }
 
 
-
-
 let global_poly = "" ;
 
 let state = {
@@ -153,6 +151,66 @@ function getTileUrls(bounds, tileLayer, zoom) {
 
     return urls;
 }
+
+var imageDisplay = function() {
+    console.log('image display')
+    var sourceOfPicture = "/images/thumb.jpg";
+    var img = document.getElementById('bigpic')
+    img.src = sourceOfPicture.replace('90x90', '225x225');
+    img.style.display = "block";    
+
+  }
+
+  var graphDisplay = function() {
+
+   trace1 = {
+  type: 'scatter',
+  x: [1, 2, 3, 4],
+  y: [10, 15, 13, 17],
+  mode: 'lines',
+  name: 'forestation',
+  line: {
+    color: 'rgb(107,142,35)',
+    width: 3
+  }
+};
+
+trace2 = {
+  type: 'scatter',
+  x: [1, 2, 3, 4],
+  y: [12, 9, 15, 12],
+  mode: 'lines',
+  name: 'urbanization',
+  line: {
+    color: 'rgb(188,143,143)',
+    width: 3
+  }
+};
+
+trace3 = {
+    type: 'scatter',
+    x: [1, 2, 3, 4],
+    y: [12, 9, 12, 11],
+    mode: 'lines',
+    name: 'water bodies',
+    line: {
+      color: 'rgb(135,206,235)',
+      width: 1
+    }
+  };
+
+var layout = {
+  width: 500,
+  height: 500
+};
+
+var data = [trace1, trace2,trace3];
+
+Plotly.newPlot('graph', data, layout);
+  }
+
+  
+
 $(function() {
     tabs.forEach( (e) => {let elem = $("#"+e+"Marker");
         respondToVisibility(elem,() => setState({tabs: {visible: e}}));
@@ -198,4 +256,5 @@ $(function() {
     $('.PureMapOptions div.cb-section.SetZoom a').on("click", (e) => {let zoom = $("#Zoom").val();
         mymap.setZoom(zoom);
     })
+
 });
