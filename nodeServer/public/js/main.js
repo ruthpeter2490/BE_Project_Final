@@ -1,4 +1,3 @@
-
 const layerMaskBind = (cssSelector, toggleOnVal, toggleOffVal,  callbackOnClick) => {
     var elem = $(cssSelector);
     elem.on('click', (() =>{
@@ -48,9 +47,12 @@ let state = {
     }
 };
 
-function setState(newState = state)  {
+function setState(newState = state, clearIconMarker = false)  {
     if (newState !== state) {
         state = deepmerge(state, newState);
+        if (clearIconMarker)    { // another hack ..sigh
+            state.DataSetCreation.iconMarkers = [];
+        }
         console.log(state);                                 // TODO remove this after debug
         render();
     } else {
@@ -73,13 +75,13 @@ function render()   {
         if(e === state.tabs.visible) elem.removeClass("cb-hide") ;else elem.addClass("cb-hide")});
 
 
-    //  Shoe Selected draw tool
     if(state.tabs.visible === "PureMap") {
         // update Lat, long
         $("#Lat").val("" +state.PureMap.center.lat);
         $("#Long").val( "" + state.PureMap.center.long);
         $("#Zoom").val( "" + state.PureMap.zoom);
     } else if(state.tabs.visible === "DataSetCreation")    {
+        //  Show Selected draw tool
         const iconTool = $(".iconTool");
         const maskTool = $(".maskDrawTool");
         switch (state.DataSetCreation.drawType) {
@@ -94,8 +96,26 @@ function render()   {
             default:
                 console.log("Error: in render, highlight in-use tool box");
         }
+
+        // List of Icons inserted
+        const iconDataList = $(".IconDataList");
+        iconDataList.empty();
+        if(state.DataSetCreation.iconMarkers.length > 0)    {
+            state.DataSetCreation.iconMarkers.forEach(((value ,index )=> {
+                iconDataList.append($('<li/>', {
+                    id: "IconDataList#"+index,
+                    className: 'IconDataListItem',
+                    html: "<b>" + value.type+ "</b> : ("+ value.lat + ","+ value.lng+")   " + "<button onclick='removeIconMarker("+index+ ")'>Remove</button>"
+                }))
+            }))
+        } else {
+            iconDataList.append($('<li/>',{
+                html:"No Icons added yet"
+            }))
+        }
     }
 }
+
 function getTileUrls(bounds, tileLayer, zoom) {
     var min = mymap.project(bounds.getNorthWest(), zoom).divideBy(256).floor(),
         max = mymap.project(bounds.getSouthEast(), zoom).divideBy(256).floor(),
@@ -110,6 +130,18 @@ function getTileUrls(bounds, tileLayer, zoom) {
     }
 
     return urls;
+}
+function removeIconMarker(markerIndex)  {
+    let clearIconMarker = false;
+    if(state.DataSetCreation.iconMarkers.length === 1)      {       // THis is a hacky thing
+        clearIconMarker = true;
+    }
+    let marker = state.DataSetCreation.iconMarkers[markerIndex];
+    let globalMarkerDictIndex = marker.globalMarkerDictIndex;
+    globalMarkerDict[parseInt(globalMarkerDictIndex)].remove();
+    let newIconMarkers = state.DataSetCreation.iconMarkers.splice(markerIndex, 1);
+    console.log(  newIconMarkers  );
+    setState({DataSetCreation: {iconMarkers:  newIconMarkers }}, clearIconMarker );
 }
 
 let moveFunc = () => {
@@ -141,16 +173,27 @@ let moveFunc = () => {
     //     [south_lat, west_long],
     //     [north_lat, west_long]]).addTo(mymap);};
 };
-
+var globalMarkerDict    = {};                // IMPORTANT DONT DELETE
+var count_globalMarkerDict = 0;
 function mapClickHandler(event)  {
     // generate a marker object with the icon
     if( state.tabs.visible === "DataSetCreation")    {
         let markerLatLng = event.latlng;
-        console.log(markerLatLng);
 
-        L.marker(markerLatLng , {
+        var makerlink = L.marker(markerLatLng , {
             "icon":ICONS[state.DataSetCreation.drawTool]
-        }).addTo(mymap)
+        });
+        makerlink.addTo(mymap);
+        globalMarkerDict[count_globalMarkerDict] = makerlink;
+        var newElem = {
+            type:state.DataSetCreation.drawTool,
+            lat: event.latlng.lat,
+            lng: event.latlng.lng,
+            globalMarkerDictIndex: count_globalMarkerDict
+        };
+
+        setState({DataSetCreation: {iconMarkers: [...state.DataSetCreation.iconMarkers, newElem]}});
+        count_globalMarkerDict += 1;
     }
 }
 
