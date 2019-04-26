@@ -16,3 +16,14 @@ if (typeof(Number.prototype.toRad) === "undefined") {
   }
 }
 
+// const slumsIcon = L.icon({iconUrl: 'icons/slumv2-round.png',iconSize: [32,32]});
+const buildingIcon = L.icon({iconUrl: 'icons/home-round.png',iconSize: [32,32]});
+const waterbodyIcon = L.icon({iconUrl: 'icons/waterbody-round.png',iconSize: [32,32]});
+const forestryIcon = L.icon({iconUrl: 'icons/forestry-round.png',iconSize: [32,32]});
+
+const ICONS = {
+  // "slums": slumsIcon,
+  "Buildings": buildingIcon,
+  "Waterbody": waterbodyIcon,
+  "Forestry": forestryIcon
+};

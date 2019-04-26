@@ -11,29 +11,38 @@ append body
                 +panel-primary("Options")
                     .options-panel
                         .PureMapOptions
-                            .cb-section.LatLonJump
-                                .cb-flex.cb-flex-row
-                                    .spacer
-                                    +a-btn-success("#") Jump to Lat/Lon
-                                .cb-flex.cb-flex-row
-                                    +input("text","Lat","Lat","Latitude")
-                                    +input("text","Long","Long","Longitude")
-                            .cb-section.SetZoom
-                                .cb-flex.cb-flex-row
-                                    .spacer-1
-                                    span.cb-bold Zoom Level
-                                .cb-flex.cb-flex-row
-                                    +input-simple("text","Zoom","Zoom","Zoom")
-                                    +a-btn-success("#") Set Zoom
-                            .cb-section#Layers
-                                span.cb-bold Layers
-                                div.layersSelection
-                                    span#masks
-                                        +label-default("Masks")
-                                    span#paths
-                                        +label-default("Paths")
+                            div.addPadding
+                                .cb-section.LatLonJump
+                                    .cb-flex.cb-flex-row
+                                        .spacer
+                                        +a-btn-success("#") Jump to Lat/Lon
+                                    .cb-flex.cb-flex-row
+                                        +input("text","Lat","Lat","Latitude")
+                                        +input("text","Long","Long","Longitude")
+                                .cb-section.SetZoom
+                                    .cb-flex.cb-flex-row
+                                        .spacer-1
+                                        span.cb-bold Zoom Level
+                                    .cb-flex.cb-flex-row
+                                        +input-simple("text","Zoom","Zoom","Zoom")
+                                        +a-btn-success("#") Set Zoom
+                                .cb-section#Layers
+                                    span.cb-bold Layers
+                                    div.layersSelection
+                                        span#masks
+                                            +label-default("Masks")
+                                        span#paths
+                                            +label-default("Paths")
                         .DataSetCreationOptions
-                            +radio-toggle-primary("DrawShape",[{caption: "PolyLine"}, {caption: "Circle"}, {caption: "Square"}],1)
+                            div.killMargin
+                                div.maskDrawTool
+                                    h5 Mask Draw Tools
+                                    +radio-toggle-primary("DrawShapeType",[{caption: "PolyLine"}, {caption: "Circle"}, {caption: "Square"}],1)
+                                hr.darkerblue
+                                div.iconTool
+                                    h5 Place Icons
+                                    +radio-toggle-primary("IconType",[{caption: "Buildings"}, {caption: "Forestry"}, {caption: "Waterbody"}],1)
+
         #temp
         +tab-list(["PureMap", "DataSetCreation", "Profile", "Messages", "Settings"],0)
             +tab("PureMap","active")
