@@ -1,88 +1,13 @@
-function isMergeableObject(val) {
-    var nonNullObject = val && typeof val === 'object';
+const layerMaskBind = (cssSelector, toggleOnVal, toggleOffVal,  callbackOnClick) => {
+    var elem = $(cssSelector);
+    elem.on('click', (() =>{
+        elem.toggleClass(toggleOnVal);
+        elem.toggleClass(toggleOffVal);
+        var selected = elem.hasClass(toggleOnVal);
+        callbackOnClick(selected);
+    }))
 
-    return nonNullObject
-        && Object.prototype.toString.call(val) !== '[object RegExp]'
-        && Object.prototype.toString.call(val) !== '[object Date]'
-}
-
-function emptyTarget(val) {
-    return Array.isArray(val) ? [] : {}
-}
-
-function cloneIfNecessary(value, optionsArgument) {
-    var clone = optionsArgument && optionsArgument.clone === true;
-    return (clone && isMergeableObject(value)) ? deepmerge(emptyTarget(value), value, optionsArgument) : value
-}
-
-function defaultArrayMerge(target, source, optionsArgument) {
-    var destination = target.slice()
-    source.forEach(function(e, i) {
-        if (typeof destination[i] === 'undefined') {
-            destination[i] = cloneIfNecessary(e, optionsArgument)
-        } else if (isMergeableObject(e)) {
-            destination[i] = deepmerge(target[i], e, optionsArgument)
-        } else if (target.indexOf(e) === -1) {
-            destination.push(cloneIfNecessary(e, optionsArgument))
-        }
-    })
-    return destination
-}
-
-function mergeObject(target, source, optionsArgument) {
-    var destination = {}
-    if (isMergeableObject(target)) {
-        Object.keys(target).forEach(function (key) {
-            destination[key] = cloneIfNecessary(target[key], optionsArgument)
-        })
-    }
-    Object.keys(source).forEach(function (key) {
-        if (!isMergeableObject(source[key]) || !target[key]) {
-            destination[key] = cloneIfNecessary(source[key], optionsArgument)
-        } else {
-            destination[key] = deepmerge(target[key], source[key], optionsArgument)
-        }
-    })
-    return destination
-}
-
-function deepmerge(target, source, optionsArgument) {
-    var array = Array.isArray(source);
-    var options = optionsArgument || { arrayMerge: defaultArrayMerge }
-    var arrayMerge = options.arrayMerge || defaultArrayMerge
-
-    if (array) {
-        return Array.isArray(target) ? arrayMerge(target, source, optionsArgument) : cloneIfNecessary(source, optionsArgument)
-    } else {
-        return mergeObject(target, source, optionsArgument)
-    }
-}
-
-deepmerge.all = function deepmergeAll(array, optionsArgument) {
-    if (!Array.isArray(array) || array.length < 2) {
-        throw new Error('first argument should be an array with at least two elements')
-    }
-    return array.reduce(function(prev, next) {
-        return deepmerge(prev, next, optionsArgument)
-    })
 };
-
-let respondToVisibility = function(element, callback) {
-    let options = {
-        root: document.documentElement
-    };
-    let observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if(entry.intersectionRatio > 0){callback();}
-        });
-    }, options);
-    (element instanceof jQuery) ?    observer.observe(element[0]):     observer.observe(element);
-};
-if (typeof(Number.prototype.toRad) === "undefined") {
-    Number.prototype.toRad = function() {
-        return this * Math.PI / 180;
-    }
-}
 
 function getTileURL(lat, lon, zoom) {
     let xtile = parseInt(Math.floor( (lon + 180) / 360 * (1<<zoom) ));
@@ -93,6 +18,9 @@ function getTileURL(lat, lon, zoom) {
 
 let global_poly = "" ;
 
+// Help : DrawType  - {mask | icon}
+//         mask  > drawTool: {PolyLine| Circle| Square}
+//         icon  > drawTool: {Buildings| Forestry| Waterbody}
 let state = {
     test:"test",
     tabs:{
@@ -105,12 +33,28 @@ let state = {
         },
         zoom:16,
         tile: getTileURL(19.04341400140714,72.82197883695116,16),
+        layers:{
+            main:{
+                "masks":false,
+                "paths":false
+            }
+        }
+    },
+    DataSetCreation:    {
+        drawType:'mask',
+        drawTool:'mask',
+        iconMarkers: [],
+        maskShapes:[]
     }
 };
 
-function setState(newState = state)  {
+function setState(newState = state, clearIconMarker = false)  {
     if (newState !== state) {
         state = deepmerge(state, newState);
+        if (clearIconMarker)    { // another hack ..sigh
+            state.DataSetCreation.iconMarkers = [];
+        }
+        console.log(state);                                 // TODO remove this after debug
         render();
     } else {
         console.log("NOC");
@@ -125,17 +69,54 @@ let tilelayer = L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}
 let tabs = ["PureMap", "DataSetCreation","Profile" ,"Messages","Settings"];         //Important
 
 function render()   {
-    document.querySelector("#temp").innerHTML =state.PureMap.center.lat;
+    document.querySelector("#temp").innerHTML = state.PureMap.center.lat;
 
     // show hide Options Tabs
     tabs.forEach( (e) => {let elem = $("."+e+"Options");
         if(e === state.tabs.visible) elem.removeClass("cb-hide") ;else elem.addClass("cb-hide")});
 
-    // update Lat, long
-    $("#Lat").val("" +state.PureMap.center.lat);
-    $("#Long").val( "" + state.PureMap.center.long);
-    $("#Zoom").val( "" + state.PureMap.zoom);
+
+    if(state.tabs.visible === "PureMap") {
+        // update Lat, long
+        $("#Lat").val("" +state.PureMap.center.lat);
+        $("#Long").val( "" + state.PureMap.center.long);
+        $("#Zoom").val( "" + state.PureMap.zoom);
+    } else if(state.tabs.visible === "DataSetCreation")    {
+        //  Show Selected draw tool
+        const iconTool = $(".iconTool");
+        const maskTool = $(".maskDrawTool");
+        switch (state.DataSetCreation.drawType) {
+            case 'mask':
+                maskTool.addClass("selectedTool");
+                iconTool.removeClass("selectedTool");
+                break;
+            case 'icon':
+                iconTool.addClass("selectedTool");
+                maskTool.removeClass("selectedTool");
+                break;
+            default:
+                console.log("Error: in render, highlight in-use tool box");
+        }
+
+        // List of Icons inserted
+        const iconDataList = $(".IconDataList");
+        iconDataList.empty();
+        if(state.DataSetCreation.iconMarkers.length > 0)    {
+            state.DataSetCreation.iconMarkers.forEach(((value ,index )=> {
+                iconDataList.append($('<li/>', {
+                    id: "IconDataList#"+index,
+                    className: 'IconDataListItem',
+                    html: "<b>" + value.type+ "</b> : ("+ value.lat + ","+ value.lng+")   " + "<button onclick='removeIconMarker("+index+ ")'>Remove</button>"
+                }))
+            }))
+        } else {
+            iconDataList.append($('<li/>',{
+                html:"No Icons added yet"
+            }))
+        }
+    }
 }
+
 function getTileUrls(bounds, tileLayer, zoom) {
     var min = mymap.project(bounds.getNorthWest(), zoom).divideBy(256).floor(),
         max = mymap.project(bounds.getSouthEast(), zoom).divideBy(256).floor(),
@@ -150,6 +131,18 @@ function getTileUrls(bounds, tileLayer, zoom) {
     }
 
     return urls;
+}
+function removeIconMarker(markerIndex)  {
+    let clearIconMarker = false;
+    if(state.DataSetCreation.iconMarkers.length === 1)      {       // THis is a hacky thing
+        clearIconMarker = true;
+    }
+    let marker = state.DataSetCreation.iconMarkers[markerIndex];
+    let globalMarkerDictIndex = marker.globalMarkerDictIndex;
+    globalMarkerDict[parseInt(globalMarkerDictIndex)].remove();
+    let newIconMarkers = state.DataSetCreation.iconMarkers.splice(markerIndex, 1);
+    console.log(  newIconMarkers  );
+    setState({DataSetCreation: {iconMarkers:  newIconMarkers }}, clearIconMarker );
 }
 
 var imageDisplay = function() {
@@ -216,45 +209,100 @@ $(function() {
         respondToVisibility(elem,() => setState({tabs: {visible: e}}));
     });
 
+let moveFunc = () => {
+    if (global_poly !== "") {
+        global_poly.remove()
+    }
+    let bounds = mymap.getBounds();
+    let zoom = mymap.getZoom();
+    let north_lat = bounds.getNorth();
+    let south_lat = bounds.getSouth();
+    let east_long = bounds.getEast();
+    let west_long = bounds.getWest();
 
+    let center = mymap.getCenter();
+    setState({PureMap: {center:{lat:center.lat, long: center.lng},
+            zoom:zoom, tile:getTileURL(center.lat,center.lng, zoom)}});
 
-    let moveFunc = () => {
-        if (global_poly !== "") {
-            global_poly.remove()
-        }
-        let bounds = mymap.getBounds();
-        let zoom = mymap.getZoom();
-        let north_lat = bounds.getNorth();
-        let south_lat = bounds.getSouth();
-        let east_long = bounds.getEast();
-        let west_long = bounds.getWest();
+    console.log(north_lat ,south_lat ,east_long ,west_long ,zoom, "+", state.PureMap.tile.x,state.PureMap.tile.y, state.PureMap.tile.z );
+    console.log(getTileUrls(mymap.getBounds(),tilelayer,zoom))
 
-        let center = mymap.getCenter();
-        setState({PureMap: {center:{lat:center.lat, long: center.lng},
-                zoom:zoom, tile:getTileURL(center.lat,center.lng, zoom)}});
+    // north_lat = north_lat * (1 - 0.0019);
+    // west_long = west_long * (1 + 0.0009);
+    // south_lat = south_lat * (1 + 0.0019);
+    // east_long = east_long * (1 - 0.0009);
+    // global_poly   = L.polygon([
+    //     [north_lat, west_long],
+    //     [north_lat, east_long],
+    //     [south_lat, east_long],
+    //     [south_lat, west_long],
+    //     [north_lat, west_long]]).addTo(mymap);};
+};
+var globalMarkerDict    = {};                // IMPORTANT DONT DELETE
+var count_globalMarkerDict = 0;
+function mapClickHandler(event)  {
+    // generate a marker object with the icon
+    if( state.tabs.visible === "DataSetCreation")    {
+        let markerLatLng = event.latlng;
 
-        console.log(north_lat ,south_lat ,east_long ,west_long ,zoom, "+", state.PureMap.tile.x,state.PureMap.tile.y, state.PureMap.tile.z );
-        console.log(getTileUrls(mymap.getBounds(),tilelayer,zoom))
+        var makerlink = L.marker(markerLatLng , {
+            "icon":ICONS[state.DataSetCreation.drawTool]
+        });
+        makerlink.addTo(mymap);
+        globalMarkerDict[count_globalMarkerDict] = makerlink;
+        var newElem = {
+            type:state.DataSetCreation.drawTool,
+            lat: event.latlng.lat,
+            lng: event.latlng.lng,
+            globalMarkerDictIndex: count_globalMarkerDict
+        };
 
-        // north_lat = north_lat * (1 - 0.0019);
-        // west_long = west_long * (1 + 0.0009);
-        // south_lat = south_lat * (1 + 0.0019);
-        // east_long = east_long * (1 - 0.0009);
-        // global_poly   = L.polygon([
-        //     [north_lat, west_long],
-        //     [north_lat, east_long],
-        //     [south_lat, east_long],
-        //     [south_lat, west_long],
-        //     [north_lat, west_long]]).addTo(mymap);};
-    };
+        setState({DataSetCreation: {iconMarkers: [...state.DataSetCreation.iconMarkers, newElem]}});
+        count_globalMarkerDict += 1;
+    }
+}
 
+function handleDataSetCreationEventHandlers()   {
+    // For the Mask Draw
+    // Shape Selection(PolyLine, Circle, Square)
+    $("[name='DrawShapeType']").parent().on('click', (e)=>
+    {
+        let nameOfDrawTool = e.target.innerText.trim();
+        setState({DataSetCreation: {drawType:"mask",drawTool:   nameOfDrawTool}});
+    });
+
+    // For the Icon Selector
+    // Icon Selection(Building, Forestry, Waterbody)
+    $("[name='IconType']").parent().on('click', (e)=>
+    {
+        let nameOfDrawTool = e.target.innerText.trim();
+        setState({DataSetCreation: {drawType:"icon",drawTool:   nameOfDrawTool}});
+    });
+}
+
+$(function() {
+    tabs.forEach( (e) => {let elem = $("#"+e+"Marker");
+        respondToVisibility(elem,() => setState({tabs: {visible: e}}));
+    });
+
+    // Event Handlers
+    mymap.on("click", mapClickHandler);
     mymap.on("moveend", moveFunc);
+    handleDataSetCreationEventHandlers();
+    //("[name='DrawShape']").parent().on('click', (e)=>console.log(e.target.innerText))
 
     $('.PureMapOptions div.cb-section.LatLonJump a').on("click", (e) => {let lat = $("#Lat").val(), long = $("#Long").val();
         mymap.panTo(new L.LatLng(lat, long)); setState({PureMap: {center:{lat:lat, long: long}}})
     });
     $('.PureMapOptions div.cb-section.SetZoom a').on("click", (e) => {let zoom = $("#Zoom").val();
         mymap.setZoom(zoom);
-    })
+    });
+
+    // Main Layers [Maps, Masks, Paths]
+    const mainLayers = {
+        "#masks > span": () => setState(),
+        "#paths > span": () => console.log("paths toggled"),
+    };
+    $.each(mainLayers, (k,v) =>  layerMaskBind(k,"label-success", "label-default",v ));
 
 });

@@ -16,22 +16,37 @@ append body
                 +panel-primary("Options")
                     .options-panel
                         .PureMapOptions
-                            .cb-section.LatLonJump
-                                .cb-flex.cb-flex-row
-                                    .spacer
-                                    +a-btn-success("#") Jump to Lat/Lon
-                                .cb-flex.cb-flex-row
-                                    +input("text","Lat","Lat","Latitude")
-                                    +input("text","Long","Long","Longitude")
-                            .cb-section.SetZoom
-                                .cb-flex.cb-flex-row
-                                    .spacer-1
-                                    span.cb-bold Zoom Level
-                                .cb-flex.cb-flex-row
-                                    +input-simple("text","Zoom","Zoom","Zoom")
-                                    +a-btn-success("#") Set Zoom
+                            div.addPadding
+                                .cb-section.LatLonJump
+                                    .cb-flex.cb-flex-row
+                                        .spacer
+                                        +a-btn-success("#") Jump to Lat/Lon
+                                    .cb-flex.cb-flex-row
+                                        +input("text","Lat","Lat","Latitude")
+                                        +input("text","Long","Long","Longitude")
+                                .cb-section.SetZoom
+                                    .cb-flex.cb-flex-row
+                                        .spacer-1
+                                        span.cb-bold Zoom Level
+                                    .cb-flex.cb-flex-row
+                                        +input-simple("text","Zoom","Zoom","Zoom")
+                                        +a-btn-success("#") Set Zoom
+                                .cb-section#Layers
+                                    span.cb-bold Layers
+                                    div.layersSelection
+                                        span#masks
+                                            +label-default("Masks")
+                                        span#paths
+                                            +label-default("Paths")
                         .DataSetCreationOptions
-                            +radio-toggle-primary("DrawShape",[{caption: "PolyLine"}, {caption: "Circle"}, {caption: "Square"}],1)
+                            div.killMargin
+                                div.maskDrawTool
+                                    h5 Mask Draw Tools
+                                    +radio-toggle-primary("DrawShapeType",[{caption: "PolyLine"}, {caption: "Circle"}, {caption: "Square"}],1)
+                                hr.darkerblue
+                                div.iconTool
+                                    h5 Place Icons
+                                    +radio-toggle-primary("IconType",[{caption: "Buildings"}, {caption: "Forestry"}, {caption: "Waterbody"}],1)
 
                 a.btn.btn-primary(onclick='imageDisplay()', style='margin-left: 1px;') Display Segmentation
                 a.btn.btn-primary(onclick='graphDisplay()') Display Analysis
@@ -53,7 +68,10 @@ append body
                 #DataSetCreationMarker
                 h1 Create Dataset
                 div#dataSetCreationMapTable
-                    +table-bordered(["#", "First Name", "Last Name", "Username"],[["1", "Mark", "Otto", "@mdo"], ["2", "Jacob", "Thornton", "@fat"], ["3", "Larry", "the Bird", "@twitter"]])
+                    //+table-bordered(["#", "First Name", "Last Name", "Username"],[["1", "Mark", "Otto", "@mdo"], ["2", "Jacob", "Thornton", "@fat"], ["3", "Larry", "the Bird", "@twitter"]])
+                    h4 Icons DataSet
+                    ul.IconDataList
+                        li No Icons added yet
             +tab("Profile")
                 #ProfileMarker
                 h1 Profile
@@ -66,4 +84,12 @@ append body
                 #SettingsMarker
                 h1 Settings
                 p This is Settings tab
-
+    style.
+        .layersSelection {
+            margin:.5rem;
+        }
+        .layersSelection span{
+            margin-right: .2rem;
+            user-select: none;
+            font-size: 1.2rem;
+        }

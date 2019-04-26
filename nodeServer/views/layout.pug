@@ -6,7 +6,7 @@ append styles
 
     // leaflet
     link(href='https://unpkg.com/leaflet@1.4.0/dist/leaflet.css', rel='stylesheet')
-
+    link(href='/css/custom/index.css', rel='stylesheet')
 
 block body
     +navbar-fixed("MapAnalyst","navbar","inverse")
@@ -14,6 +14,10 @@ block body
         +nav_item("/qgis") QGIS
         +nav_item("#") Contact
 
-append scripts
-    script(src='https://unpkg.com/leaflet@1.4.0/dist/leaflet.js')
 
+append scripts
+    //script(src='https://unpkg.com/leaflet@1.4.0/dist/leaflet.js')         // replicated to local
+    script(src='/js/http_unpkg.com_leaflet@1.4.0_dist_leaflet.js')
+    script(src='/js/deepmerge.js')
+    script(src='/js/utils.js')
+    script(src='/js/main.js')

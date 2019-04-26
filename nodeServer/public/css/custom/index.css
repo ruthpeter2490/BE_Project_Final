@@ -85,5 +85,26 @@
 @media all and (min-width: 1200px) {
   .item {
     flex-basis: 20%; } }
+.right-unit .panel .panel-body {
+  padding: 0px; }
+  .right-unit .panel .panel-body .PureMapOptions .addPadding {
+    padding: 15px; }
+  .right-unit .panel .panel-body .DataSetCreationOptions h5 {
+    margin: 0px;
+    padding: 5px;
+    border: thin solid white;
+    display: inline-block;
+    background-color: white;
+    border-radius: 10px; }
+  .right-unit .panel .panel-body .DataSetCreationOptions .selectedTool {
+    background-image: linear-gradient(45deg, #fcd19f 25%, #ff0000 25%, #ff0000 50%, #fcd19f 50%, #fcd19f 75%, #ff0000 75%, #ff0000 100%);
+    background-size: 56.57px 56.57px; }
+  .right-unit .panel .panel-body .DataSetCreationOptions .killMargin .maskDrawTool {
+    padding: 15px; }
+  .right-unit .panel .panel-body .DataSetCreationOptions .killMargin .darkerblue {
+    margin: 0px;
+    border-top: 1px solid #337ab7; }
+  .right-unit .panel .panel-body .DataSetCreationOptions .killMargin .iconTool {
+    padding: 15px; }
 
 /*# sourceMappingURL=index.css.map */

@@ -79,7 +79,10 @@ def demo():
         dp(DEBUG_DEMO, "Stored the file as (" + filename + ") in location ("+IMAGE_FOLDER+")")
         # dp(DEBUG_DEMO, os.listdir(IMAGE_FOLDER))
 
-        process_batch_with_unet(IMAGE_FOLDER,RESULT_FOLDER)
+        try:
+            process_batch_with_unet(IMAGE_FOLDER,RESULT_FOLDER)
+        except KeyError :
+            print (k)
 
         return jsonify({"message": "received the File"})
     return jsonify({"message": "Invalid API Call"})
