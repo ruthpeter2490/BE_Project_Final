@@ -165,8 +165,8 @@ var imageDisplay = function() {
 
    trace1 = {
   type: 'scatter',
-  x: [1, 2, 3, 4],
-  y: [10, 15, 13, 17],
+  x: [1988, 1998, 2008, 2018],
+  y: [28, 27, 24, 23],
   mode: 'lines',
   name: 'forestation',
   line: {
@@ -177,8 +177,8 @@ var imageDisplay = function() {
 
 trace2 = {
   type: 'scatter',
-  x: [1, 2, 3, 4],
-  y: [12, 9, 15, 12],
+  x: [1988, 1998, 2008, 2018],
+  y: [59, 62, 64, 66],
   mode: 'lines',
   name: 'urbanization',
   line: {
@@ -189,13 +189,13 @@ trace2 = {
 
 trace3 = {
     type: 'scatter',
-    x: [1, 2, 3, 4],
-    y: [12, 9, 12, 11],
+    x: [1988, 1998, 2008, 2018],
+    y: [12, 12, 11, 10],
     mode: 'lines',
     name: 'water bodies',
     line: {
       color: 'rgb(135,206,235)',
-      width: 1
+      width: 2
     }
   };
 

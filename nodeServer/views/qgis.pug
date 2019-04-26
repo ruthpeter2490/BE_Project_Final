@@ -8,62 +8,30 @@ append scripts
 append body
     .big-container
         .container-flex
-            .left-unit
-                div#mapId
-            .spacer
-                span= " "
-            .right-unit
-                +panel-primary("QGIS")
-                    .options-panel
-                        .PureMapOptions
-                            .cb-section.LatLonJump
-                                .cb-flex.cb-flex-row
-                                    .spacer
-                                    +a-btn-success("#") Jump to Lat/Lon
-                                .cb-flex.cb-flex-row
-                                    +input("text","Lat","Lat","Latitude")
-                                    +input("text","Long","Long","Longitude")
-                            .cb-section.SetZoom
-                                .cb-flex.cb-flex-row
-                                    .spacer-1
-                                    span.cb-bold Zoom Level
-                                .cb-flex.cb-flex-row
-                                    +input-simple("text","Zoom","Zoom","Zoom")
-                                    +a-btn-success("#") Set Zoom
-                        .DataSetCreationOptions
-                            +radio-toggle-primary("DrawShape",[{caption: "PolyLine"}, {caption: "Circle"}, {caption: "Square"}],1)
-
-                a.btn.btn-primary(onclick='imageDisplay()', style='margin-left: 1px;') Display Segmentation
-                a.btn.btn-primary(onclick='graphDisplay()') Display Analysis
-                p
-                img(id="bigpic")
-                
-                p
-                div(id="graph" style="width:600px;height:250px;")
-
-               
             
-
         #temp
-        +tab-list(["PureMap", "DataSetCreation", "Profile", "Messages", "Settings"],0)
-            +tab("PureMap","active")
+        +tab-list(["Original", "Urbanization", "Vegetation", "Agriculture", "Land_and_Water","Atmosphere_Removal"],0)
+            +tab("Original","active")
                 #PureMapMarker
                 h1 Map
-            +tab("DataSetCreation")
-                #DataSetCreationMarker
-                h1 Create Dataset
-                div#dataSetCreationMapTable
-                    +table-bordered(["#", "First Name", "Last Name", "Username"],[["1", "Mark", "Otto", "@mdo"], ["2", "Jacob", "Thornton", "@fat"], ["3", "Larry", "the Bird", "@twitter"]])
-            +tab("Profile")
-                #ProfileMarker
-                h1 Profile
-                p This is Profile tab
-            +tab("Messages")
-                #MessagesMarker
-                h1 Messages
-                p This is Messages tab
-            +tab("Settings")
-                #SettingsMarker
-                h1 Settings
-                p This is Settings tab
-
+                img(src="/images/thumb.jpg")
+            +tab("Urbanization")
+                #Urbanization
+                h1 Urbanization
+                p yolo
+            +tab("Vegetation")
+                #Vegetation
+                h1 Vegetation
+                p Vegetation
+            +tab("Agriculture")
+                #Agriculture
+                h1 Agriculture 
+                p Agriculture
+            +tab("Land_and_Water")
+                #Land_and_Water
+                h1 Land_and_Water
+                p This is land
+            +tab("Atmosphere_Removal")
+                #Atmosphere_Removal
+                h1 Atmosphere_Removal
+                p This is atmosphere
