@@ -150,12 +150,18 @@ function removeIconMarker(markerIndex) {
 
 var imageDisplay = function () {
   console.log('image display')
-  var sourceOfPicture = "/images/thumb.jpg";
+  var sourceOfPicture = "/images/output.jpg";
   var img = document.getElementById('bigpic')
-  img.src = sourceOfPicture.replace('90x90', '225x225');
-  img.style.display = "block";
+  img.src = sourceOfPicture.replace('256x256','300x300');
+  if (img.style.display === "none") {
+    img.style.display = "block";
+  } else {
+    img.style.display = "none";
+  }
 
 }
+
+
 
 var graphDisplay = function () {
 
@@ -203,10 +209,26 @@ var graphDisplay = function () {
   var data = [trace1, trace2, trace3];
 
   Plotly.newPlot('graph', data, layout);
+  
+  var grh = document.getElementById('graph');
+  if (grh.style.display === "none") {
+    grh.style.display = "block";
+  } else {
+    grh.style.display = "none";
+  }
+  
+
 }
 
-
-
+var textDisplay = function () {
+  console.log('text display')
+  var txt = document.getElementById("text");
+  if (txt.style.display === "none") {
+  txt.style.display = "block";
+  } else {
+    txt.style.display = "none";
+  }
+}
   let moveFunc = () => {
     if (global_poly !== "") {
       global_poly.remove()

@@ -49,18 +49,26 @@ append body
                                     +radio-toggle-primary("IconType",[{caption: "Buildings"}, {caption: "Forestry"}, {caption: "Waterbody"}],1)
 
                 a.btn.btn-primary(onclick='imageDisplay()', style='margin-left: 1px;') Display Segmentation
-                a.btn.btn-primary(onclick='graphDisplay()') Display Analysis
+                a.btn.btn-success(onclick='graphDisplay()') Display Analysis
+                a.btn.btn-primary(onclick='textDisplay()') Final Result 
                 p
                 img(id="bigpic" , style='margin-left: auto ; margin-right: auto;')
-                
                 p
-                div(id="graph" style="width:600px;height:250px;")
+                div(id="graph" style="width:500px;height:250px; display:none;")
+                p
+                div(id="text" style="display:none;") 
+                    h4 From above we can see:
+                        h5 
+                            ul
+                                li 5% decrease in forestation
+                                li 6% increase in urbanization
+                        h5  We must contact officials to alert them about the same
 
                
             
 
         #temp
-        +tab-list(["PureMap", "DataSetCreation", "Profile", "Messages", "Settings"],0)
+        +tab-list(["PureMap", "DataSetCreation", "Result", "Messages", "Settings"],0)
             +tab("PureMap","active")
                 #PureMapMarker
                 h1 Map
@@ -72,10 +80,14 @@ append body
                     h4 Icons DataSet
                     ul.IconDataList
                         li No Icons added yet
-            +tab("Profile")
+            +tab("Result")
                 #ProfileMarker
-                h1 Profile
-                p This is Profile tab
+                h4 From above we can see:
+                        h5 
+                            ul
+                                li 5% decrease in forestation
+                                li 6% increase in urbanization
+                        h5  We must contact officials to alert them about the same
             +tab("Messages")
                 #MessagesMarker
                 h1 Messages
