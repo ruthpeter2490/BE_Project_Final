@@ -61,7 +61,7 @@ function setState(newState = state, clearIconMarker = false) {
   }
 }
 
-let mymap = L.map('mapId').setView([19.04341400140714, 72.8826], 16);
+let mymap = L.map('mapId').setView([19.14301947079631 ,72.90083122441892], 16);
 let tilelayer = L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
   maxZoom: 18,
 }).addTo(mymap);
@@ -168,7 +168,8 @@ var graphDisplay = function () {
   trace1 = {
     type: 'scatter',
     x: [1988, 1998, 2008, 2018],
-    y: [28, 27, 24, 23],
+    y: [30, 27, 27, 24],
+    
     mode: 'lines',
     name: 'forestation',
     line: {
@@ -179,8 +180,9 @@ var graphDisplay = function () {
 
   trace2 = {
     type: 'scatter',
-    x: [1988, 1998, 2008, 2018],
-    y: [59, 62, 64, 66],
+x: [1988, 1998, 2008, 2018],
+    y: [70, 69, 70, 72],
+    
     mode: 'lines',
     name: 'urbanization',
     line: {
@@ -192,7 +194,7 @@ var graphDisplay = function () {
   trace3 = {
     type: 'scatter',
     x: [1988, 1998, 2008, 2018],
-    y: [12, 12, 11, 10],
+    y: [64, 65, 63, 60],
     mode: 'lines',
     name: 'water bodies',
     line: {
