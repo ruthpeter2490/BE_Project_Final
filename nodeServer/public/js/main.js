@@ -4,6 +4,12 @@ const layerMaskBind = (cssSelector, toggleOnVal, toggleOffVal,  callbackOnClick)
     elem.on('click', (() =>{
         elem.toggleClass(toggleOnVal);
         elem.toggleClass(toggleOffVal);
+        boolean t=true; 
+   
+        if(t)
+            console.log("Jnside layer MaskBind");
+        
+        
         var selected = elem.hasClass(toggleOnVal);
         callbackOnClick(selected);
     }))
